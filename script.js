@@ -48,8 +48,9 @@ function setTrailer(e){
   let trailerFoundDiv = document.getElementById('notFound');
   getMovieTrailer(id).then(data =>{
     if(data['results'].length > 0){
-      
-      let key = String(data['results'][0]['key']);
+      console.log(data['results'])
+      let desiredObject = data['results'].filter(ele => ele.site == "YouTube" && ele.type == "Trailer");
+      let key = String(desiredObject[0]['key']);
       modalWindow.setAttribute('src', ytRoot+key);
       trailerFoundDiv.style.display = 'none';
     }
