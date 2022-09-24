@@ -100,7 +100,7 @@ img {
 .featured {
   height: 400px;
   position: relative;
-  background-image: url('https://image.tmdb.org/t/p/original//3lBDg3i6nn5R2NKFCJ6oKyUo2j5.jpg');
+  /*background-image: url('https://image.tmdb.org/t/p/original//3lBDg3i6nn5R2NKFCJ6oKyUo2j5.jpg');*/
   background-size: cover;
   background-position: center;
   padding: 0 0 0 30px;

@@ -5,21 +5,23 @@ let trendingDiv = document.getElementById('trending');
 let topRatedDiv = document.getElementById('top_rated');
 let modalWindow = document.getElementById('movieTrailer');
 
+//base url format for movie object images
+let rootUrl = 'https://image.tmdb.org/t/p/original';
+
 
 //must append image path to url in order to pull images into web app
 
 // Call the main functions the page is loaded
 window.onload = () => {
-  getOriginals();
-  getTrendingNow();
+  setFeatured();
+  getTrending();
+  getUpcoming();
   getTopRated();
-}
+}  
 
 //make API call to get array of movies by category
 //each category of movie requires its own unique API call
 function fetchMovies(url, dom_element, path) {
-  //base url format for movie object images
-  let rootUrl = 'https://image.tmdb.org/t/p/original';
   // Use Fetch with the url passed down 
   let response = fetch(url).then 
     (response => response.json())
@@ -48,7 +50,6 @@ function setTrailer(e){
   let trailerFoundDiv = document.getElementById('notFound');
   getMovieTrailer(id).then(data =>{
     if(data['results'].length > 0){
-      console.log(data['results'])
       let desiredObject = data['results'].filter(ele => ele.site == "YouTube" && ele.type == "Trailer");
       let key = String(desiredObject[0]['key']);
       modalWindow.setAttribute('src', ytRoot+key);
@@ -70,14 +71,35 @@ function setTrailer(e){
   )
 }
 
+//function that sets featured movie title onto DOM
+function setFeatured(){
+  //using API call that gets a list of movies currently playing in theatres
+  let response = fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=19f84e11932abbc79e6d83f82d6d1045' ).then
+  (response => response.json()).then
+  (data => {
+    let div = document.getElementsByClassName("featured")[0];
+    div.style.backgroundImage = `url(${rootUrl+data['results'][0]['poster_path']})`;
+    console.log(data['results'][0]);
+    document.getElementById('featuredTitle').innerText = data['results'][0]['title'];
+    document.getElementById('featuredDescription').innerText = data['results'][0]['overview'];
+
+    let button = document.getElementsByClassName("button__play")[0];
+    button.setAttribute("data-id", String(data.results[0].id));
+    button.addEventListener("click", e => {setTrailer(e)})
+  }).catch
+  (err => {
+    console.log(err);
+  });
+}
+
 // ** Function that fetches Netflix Originals **
-function getOriginals() {
-  fetchMovies('https://api.themoviedb.org/3/discover/tv?api_key=19f84e11932abbc79e6d83f82d6d1045&with_networks=213' 
+function getTrending() {
+  fetchMovies('https://api.themoviedb.org/3/trending/movie/week?api_key=19f84e11932abbc79e6d83f82d6d1045' 
 ,originalsDiv, 'poster_path');
 }
 // ** Function that fetches Trending Movies **
-function getTrendingNow() {
-  fetchMovies('https://api.themoviedb.org/3/trending/movie/week?api_key=19f84e11932abbc79e6d83f82d6d1045'
+function getUpcoming() {
+  fetchMovies('https://api.themoviedb.org/3/movie/upcoming?api_key=19f84e11932abbc79e6d83f82d6d1045'
 ,trendingDiv, 'backdrop_path');
 
 }
