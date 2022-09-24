@@ -54,6 +54,13 @@ function setTrailer(e){
       let key = String(desiredObject[0]['key']);
       modalWindow.setAttribute('src', ytRoot+key);
       trailerFoundDiv.style.display = 'none';
+
+      //modal window close button
+      let closeButton = document.getElementsByClassName("close")[0];
+      closeButton.addEventListener("click", () => {
+        modalWindow.setAttribute("src", "");
+      });
+
     }
     else if (data['results'].length == 0){
       trailerFoundDiv.style.display = '';
